@@ -1,3 +1,29 @@
+ 
+# BEAD CLASS
+
+class Node:
+    def __init__(self, loc, pol, neigh):
+        self.position = loc
+        self.polarity = pol
+        self.neighbors = neigh
+
+    def connect(self, node):
+        self.neighbors.add(node)
+
+    def isConnected(self, node):
+        return node in self.neighbors
+    
+    def samePolarity(self, node):
+        return self.polarity == node.polarity    
+    
+# TESTING CLASS
+a = Node((0,0), 'H', set())
+b = Node((0,0), 'H', {a})
+a.connect(b)
+print(b.samePolarity(a))
+
+
+# CHAIN GENERATION
 
 # Chain length
 # Directions for a 2D square lattice
