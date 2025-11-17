@@ -1,4 +1,8 @@
- 
+import numpy
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import scipy
+
 # Protein Monomer Class
 
 class Node:
@@ -21,13 +25,44 @@ class Node:
     def isStart(self):
         return self.first == 1
 
-    
-# Testing
-# a = Node((0,0), 'H', set(),0)
-# b = Node((0,0), 'H', {a},1)
-# a.connect(b)
-# print(b.samePolarity(a))
+# sequences are bit strings
+def setSequence(graph, seq):
+    if len(graph) == len(seq):
+        for i in range(len(graph)):
+            if seq[i] == 0:
+                graph[i].polarity = 'H'
+            else:
+                graph[i].polarity = 'P'
+    else:
+        print("Length mismatch")
 
+# def findTopolNeighbors(graph):
+#     visited = set()
+#     m = 0
+#     for i in range(len(graph)):
+#         visited.add(graph[i])
+#         for d in DIRECTIONS:  
+#             nxt = add(tuple(graph[i].position), d)
+#             for 
+
+#Fix later, this looks terrible
+
+def findTopologicalNeighbors(graph):
+    visited = set()
+    m = 0
+    for i in range(len(graph)):
+        visited.add(graph[i]) 
+        for j in range(len(graph)):
+            if graph[j] not in graph[i].neighbors:
+                for d in DIRECTIONS:  
+                    nxt = add(tuple(graph[i].position), d)
+                    if graph[j].position == nxt and graph[j] not in visited:
+                        if graph[j].polarity == graph[j].polarity:
+                            if graph[i].polarity == 'H':
+                                m += 1
+    return m
+
+                        
 
 # Chain Generation
 
@@ -83,7 +118,6 @@ def sawToGraph(saw):
     i = 0
     for b in saw:
         if i == 0:
-            # Node(loc, polarity, neighbors_set, start_flag)
             g.append(Node(b, 'H', set(), 1))
         else:
             g.append(Node(b, 'H', set(), 0))
@@ -91,13 +125,38 @@ def sawToGraph(saw):
         i += 1
     return g
 
+     
 g = []
-for w in enumerate_saws(3):
+for w in enumerate_saws(4):
     g.append(sawToGraph(w))
 
-for gr in g:
-    print('new graph')
-    for n in gr:
-        print(n.position)
-        print()
-        print(n.isStart())
+# ma = 0
+# for i in g:
+#     count = 1
+#     print("neighbors: " + str(findTopologicalNeighbors(i)))
+#     ma = max(ma, findTopologicalNeighbors(i))
+#     for j in i:
+#         print("node " + str(count) + " position: " + str(j.position))
+
+# print(ma)
+
+plt.figure()
+for w in g:
+    x_l = []
+    y_l = []
+    for n in w:
+        x = list(n.position)[0]
+        y = list(n.position)[1]
+        x_l.append(x)
+        y_l.append(y)
+    plt.plot(x_l,y_l, marker='.',ms=10)
+    ax = plt.gca()
+
+    # Set major ticks every 1 unit
+    # ax.xaxis.set_major_locator(ticker.MultipleLocator(1.0))
+    # ax.yaxis.set_major_locator(ticker.MultipleLocator(1.0))
+    # plt.grid(True)
+    plt.xlim(-3,3)
+    plt.ylim(-3,3)
+    plt.show()
+
