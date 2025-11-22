@@ -1,9 +1,9 @@
 class Node:
-    def __init__(self, loc, pol, neigh, start):
+    def __init__(self, loc, pol, neigh):
         self.position = loc
         self.polarity = pol
         self.neighbors = neigh
-        self.first = start
+        # self.first = start
 
     def connect(self, node):
         self.neighbors.add(node)
@@ -13,7 +13,8 @@ class Node:
         return node in self.neighbors
     
     def samePolarity(self, node):
-        return self.polarity == node.polarity
+        return self.polarity == node.polarity 
 
-    def isStart(self):
-        return self.first == 1
+    # def isStart(self):
+    #     return self.first == 1
+
