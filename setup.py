@@ -1,29 +1,8 @@
 import numpy
+import scipy
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
-import scipy
-
-# Protein Monomer Class
-
-class Node:
-    def __init__(self, loc, pol, neigh, start):
-        self.position = loc
-        self.polarity = pol
-        self.neighbors = neigh
-        self.first = start
-
-    def connect(self, node):
-        self.neighbors.add(node)
-        node.neighbors.add(self)
-
-    def isConnected(self, node):
-        return node in self.neighbors
-    
-    def samePolarity(self, node):
-        return self.polarity == node.polarity
-
-    def isStart(self):
-        return self.first == 1
+from node import Node
 
 # sequences are bit strings
 def setSequence(graph, seq):
@@ -36,31 +15,40 @@ def setSequence(graph, seq):
     else:
         print("Length mismatch")
 
-# def findTopolNeighbors(graph):
-#     visited = set()
-#     m = 0
-#     for i in range(len(graph)):
-#         visited.add(graph[i])
-#         for d in DIRECTIONS:  
-#             nxt = add(tuple(graph[i].position), d)
-#             for 
+def findTopologicalNeighbors(graph):
+    # positions = {n.position for n in graph}
+    h_nodes = [n for n in graph if n.polarity == 'H']
+    h_pos = [n.position for n in h_nodes]
+    visited = set()
+    m = 0
+    for node in h_nodes:
+        visited.add(node)
+        neigh_pos = [n.position for n in node]
+        for d in DIRECTIONS:  
+            nxt = add(tuple(graph[i].position), d) # Directions and node.neighbors has upper bound
+            if nxt in h_pos and nxt not in neigh_pos:
+                if nxt not in visited:
+                    visited.add(nxt)
+                    m += 1
+
+    return m
 
 #Fix later, this looks terrible
 
-def findTopologicalNeighbors(graph):
-    visited = set()
-    m = 0
-    for i in range(len(graph)):
-        visited.add(graph[i]) 
-        for j in range(len(graph)):
-            if graph[j] not in graph[i].neighbors:
-                for d in DIRECTIONS:  
-                    nxt = add(tuple(graph[i].position), d)
-                    if graph[j].position == nxt and graph[j] not in visited:
-                        if graph[j].polarity == graph[j].polarity:
-                            if graph[i].polarity == 'H':
-                                m += 1
-    return m
+# def findTopologicalNeighbors(graph):
+#     visited = set()
+#     m = 0
+#     for i in range(len(graph)):
+#         visited.add(graph[i]) 
+#         for j in range(len(graph)):
+#             if graph[j] not in graph[i].neighbors:
+#                 for d in DIRECTIONS:  
+#                     nxt = add(tuple(graph[i].position), d)
+#                     if graph[j].position == nxt and graph[j] not in visited:
+#                         if graph[j].polarity == graph[j].polarity:
+#                             if graph[i].polarity == 'H':
+#                                 m += 1
+#     return m
 
                         
 
@@ -68,6 +56,7 @@ def findTopologicalNeighbors(graph):
 
 # Chain length
 # Directions for a 2D square lattice
+
 DIRECTIONS = [(1,0), (-1,0), (0,1), (0,-1)]
 
 def add(a, b):
@@ -127,8 +116,10 @@ def sawToGraph(saw):
 
      
 g = []
-for w in enumerate_saws(4):
+for w in enumerate_saws(10):
     g.append(sawToGraph(w))
+
+# Testing neighbor counter
 
 # ma = 0
 # for i in g:
@@ -140,23 +131,52 @@ for w in enumerate_saws(4):
 
 # print(ma)
 
-plt.figure()
-for w in g:
-    x_l = []
-    y_l = []
-    for n in w:
-        x = list(n.position)[0]
-        y = list(n.position)[1]
-        x_l.append(x)
-        y_l.append(y)
-    plt.plot(x_l,y_l, marker='.',ms=10)
-    ax = plt.gca()
+# PLOTTING
+
+# plt.figure()
+# plt.xlim(-3,3)
+# plt.ylim(-3,3)
+# for w in g:
+#     x_l = []
+#     y_l = []
+#     for n in w:
+#         x = list(n.position)[0]
+#         y = list(n.position)[1]
+#         x_l.append(x)
+#         y_l.append(y)
+#     plt.figure()
+#     plt.plot(x_l,y_l, marker='.',ms=10)
+#     plt.show()
+    # ax = plt.gca()
 
     # Set major ticks every 1 unit
     # ax.xaxis.set_major_locator(ticker.MultipleLocator(1.0))
     # ax.yaxis.set_major_locator(ticker.MultipleLocator(1.0))
     # plt.grid(True)
-    plt.xlim(-3,3)
-    plt.ylim(-3,3)
-    plt.show()
+    # plt.xlim(-3,3)
+    # plt.ylim(-3,3)
+    # plt.show()
 
+
+# phi = 0.5
+
+l = {}
+
+for i in range(len(g)):
+    setSequence(g[i], [0,1,0,1,0,1,0,1,0,1])
+    energy = findTopologicalNeighbors(g[i])
+    if energy not in l:
+        l[energy] = [g[i]]
+    else:
+        temp = l[energy]
+        temp.append(g[i])
+        l[energy] = temp
+
+x = []
+y = []
+for key in l:
+    y.append(len(l[key])/len(g))
+    x.append(key)
+
+plt.plot(x,y)
+plt.show()
