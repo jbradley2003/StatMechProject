@@ -1,67 +1,15 @@
-import numpy
+import numpy as np
 import scipy
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from node import Node
-
-# sequences are bit strings
-def setSequence(graph, seq):
-    if len(graph) == len(seq):
-        for i in range(len(graph)):
-            if seq[i] == 0:
-                graph[i].polarity = 'H'
-            else:
-                graph[i].polarity = 'P'
-    else:
-        print("Length mismatch")
-
-# def findTopologicalNeighbors(graph):
-#     # positions = {n.position for n in graph}
-#     h_nodes = [n for n in graph if n.polarity == 'H']
-#     h_pos = [n.position for n in h_nodes]
-#     visited = set()
-#     m = 0
-#     for node in h_nodes:
-#         visited.add(node)
-#         neigh_pos = [n.position for n in node.neighbors]
-#         for d in DIRECTIONS:  
-#             nxt = add(tuple(node.position), d) # Directions and node.neighbors has upper bound
-#             if nxt in h_pos and nxt not in neigh_pos:
-#                 if nxt not in visited:
-#                     visited.add(nxt)
-#                     m += 1
-
-#     return [m,visited]
-
-#Fix later, this looks terrible
-
-def findTopologicalNeighbors(graph):
-    visited = set()
-    m = 0
-    for i in range(len(graph)):
-        visited.add(graph[i]) 
-        for j in range(len(graph)):
-            if graph[j] not in graph[i].neighbors:
-                for d in DIRECTIONS:  
-                    nxt = add(tuple(graph[i].position), d)
-                    if graph[j].position == nxt and graph[j] not in visited:
-                        if graph[j].polarity == graph[j].polarity:
-                            if graph[i].polarity == 'H':
-                                m += 1
-    return m
-
-                        
-
-# Chain Generation
-
-# Chain length
-# Directions for a 2D square lattice
 
 DIRECTIONS = [(1,0), (-1,0), (0,1), (0,-1)]
 
 def add(a, b):
     return (a[0] + b[0], a[1] + b[1])
 
+# Chain Generation
 
 def enumerate_saws(n):
     """
@@ -114,71 +62,104 @@ def sawToGraph(saw):
         i += 1
     return g
 
-     
-g = []
-for w in enumerate_saws(10):
-    g.append(sawToGraph(w))
+# Generate all conformations of length n
 
-b = g[20]
-print(findTopologicalNeighbors(b))
-# print(len(g))
-# Testing neighbor counter
+def generateConformations(n, seq):
+    g = []
+    for w in enumerate_saws(n):
+        h = sawToGraph(w)
+        setSequence(h, seq)
+        g.append(h)
+    return g
 
-# ma = 0
-# for i in g:
-#     count = 1
-#     print("neighbors: " + str(findTopologicalNeighbors(i)))
-#     ma = max(ma, findTopologicalNeighbors(i))
-#     for j in i:
-#         print("node " + str(count) + " position: " + str(j.position))
+# Represent residue sequence as list of bits
 
-# print(ma)
-
-# PLOTTING
-x_l = []
-y_l = []
-plt.figure()
-plt.xlim(-10,10)
-plt.ylim(-10,10)
-for n in b:
-        x = list(n.position)[0]
-        y = list(n.position)[1]
-        x_l.append(x)
-        y_l.append(y)
-plt.plot(x_l,y_l, marker='.',ms=10)
-plt.show()
-    # ax = plt.gca()
-
-    # Set major ticks every 1 unit
-    # ax.xaxis.set_major_locator(ticker.MultipleLocator(1.0))
-    # ax.yaxis.set_major_locator(ticker.MultipleLocator(1.0))
-    # plt.grid(True)
-    # plt.xlim(-3,3)
-    # plt.ylim(-3,3)
-    # plt.show()
+def setSequence(graph, seq):
+    if len(graph) == len(seq):
+        for i in range(len(graph)):
+            if seq[i] == 0:
+                graph[i].polarity = 'H'
+            else:
+                graph[i].polarity = 'P'
+    else:
+        print("Length mismatch")
 
 
-# phi = 0.5
+def findTopolHHNeighbors(graph):
+    h_nodes = [node for node in graph if node.polarity == 'H']
+    h_positions = [node.position for node in graph if node.polarity == 'H']
+    visited = set()
+    m = 0
+    for n in h_nodes:
+        neigh_positions = [node.position for node in n.neighbors]
+        for d in DIRECTIONS:  
+            nxt = add(n.position, d)
+            if nxt in h_positions and nxt not in neigh_positions:
+                pair = tuple(sorted([n.position, nxt]))
+                if pair not in visited:
+                    visited.add(pair)
+                    m += 1
+    return m
 
-l = {}
+def getGraphSequence(graph):
+    seq = []
+    for n in graph:
+        if n.polarity == 'H':
+            seq.append(0)
+        else:
+            seq.append(1)
+    return seq
 
-# setSequence(b, [0,1,0,1,0,1,0,1,0,1])
+def findAllTopolNeighbors(graph):
+    return
 
-# for i in range(len(g)):
-#     setSequence(g[i], [0,1,0,1,0,1,0,1,0,1])
-#     energy = findTopologicalNeighbors(g[i])
-#     if energy not in l:
-#         l[energy] = [g[i]]
-#     else:
-#         temp = l[energy]
-#         temp.append(g[i])
-#         l[energy] = temp
+def displayConformation(graph):
+    n = len(graph)
+    x_l = []
+    y_l = []
+    plt.figure()
+    for n in graph: 
+            x_l.append(n.position[0])
+            y_l.append(n.position[1])
+    plt.plot(x_l,y_l, marker='.',ms=10)
+    plt.show()
 
-# x = []
-# y = []
-# for key in l:
-#     y.append(len(l[key])/len(g))
-#     x.append(key)
+def printPositions(graph):
+    for i in range(len(graph)):
+        print("Node " + str(i) + " position: " + str(graph[i].position))
 
-# plt.plot(x,y)
+def calcZ(ensemble, e):
+    max = 0
+    z = 0
+    freq = {}
+    for i in ensemble:
+        m = findTopolHHNeighbors(i)
+        if m in freq:
+            freq[m] += 1
+        else:
+            freq[m] = 1
+        if m > max:
+            max = m
+    for i in range(max+1):
+        if i in freq:
+            z += freq[i] * np.exp((max-i)*(-e))
+    return [z, freq, max]
+
+def calcAvgM(ensemble, e):
+    z, freq, max = calcZ(ensemble, e)
+    avg_m = 0
+    for i in range(max+1):
+        if i in freq:
+            avg_m += i * freq[i] * np.exp((max-i)*(-e))
+    avg_m /= z
+    return avg_m
+
+x = [x for x in range(0,13)]
+seq = [0,1,0,1,1,0,1,1,0,0] # HPHPPHPPHH
+
+g = generateConformations(10,seq)
+y = [calcZ(g, e)[0] for e in x]
+# plt.plot(x,y, marker='o')
+# plt.yscale('log')
 # plt.show()
+

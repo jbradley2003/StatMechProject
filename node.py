@@ -3,7 +3,6 @@ class Node:
         self.position = loc
         self.polarity = pol
         self.neighbors = neigh
-        # self.first = start
 
     def connect(self, node):
         self.neighbors.add(node)
@@ -15,6 +14,4 @@ class Node:
     def samePolarity(self, node):
         return self.polarity == node.polarity 
 
-    # def isStart(self):
-    #     return self.first == 1
-
+# set position to make sure neighbors positions are updated?
