@@ -1,5 +1,5 @@
 import random
-import math
+# import math
 import copy
 # from numpy import *
 from node import Node
@@ -7,68 +7,66 @@ from setup import *
 
 DIRECTIONS = [(1,0), (-1,0), (0,1), (0,-1)]
 
-def main(size, iterations, seq):
-    # l = [n for n in range(1,size-1)]
-    g = generateConformations(size)
-    ensemble = set()
+def main(size, iterations, seq, energy=-2.0):
+    g = generateConformations(size, seq)
     total = []
     current = g[0]
     setSequence(current, seq)
-    displayConformation(current)
     for i in range(iterations):
         rand = random.randrange(size)
         # rand = random.choice(l)
         if rand == 0 or rand == size - 1:
-            new = endRotation(current, rand)
+            new = endRotationOG(current, rand)
             pass
         else:
-            new = cornerFlip(current, rand)
-        if accept(current, new):
-            total.append(new) # how does allowing duplicates influence average values?
+            # new = cornerFlip(current, rand)
+            new = current
+        if accept(current, new, energy):
+            total.append(new)
             current = new
-            print(findTopolHHNeighbors(current))
-    displayConformation(current)
-    print(seq)
+            displayConformation(current)
+            # print(findTopolHHNeighbors(current))
     return total
 
 
-def endRotation(graph, n):
-    # n is an endpoint: degree = 1
-    g = copy.deepcopy(graph)
-    bead = g[n]
-    node_pos = {b.position for b in g}
+# def endRotation(graph, n):
+#     # n is an endpoint: degree = 1
+#     g = copy.deepcopy(graph)
+#     bead = g[n]
+#     node_pos = {b.position for b in g}
 
-    # get the only neighbor
-    nbr = next(iter(bead.neighbors))
-    nx, ny = nbr.position
+#     # get the only neighbor
+#     nbr = next(iter(bead.neighbors))
+#     nx, ny = nbr.position
 
-    # potential new positions: all 4 directions around the neighbor
-    candidates = [(nx+dx, ny+dy) for dx,dy in DIRECTIONS]
+#     # potential new positions: all 4 directions around the neighbor
+#     candidates = [(nx+dx, ny+dy) for dx,dy in DIRECTIONS]
 
-    # cannot stay on top of neighbor or collide with any bead
-    valid = [p for p in candidates if p != bead.position and p not in node_pos]
+#     # cannot stay on top of neighbor or collide with any bead
+#     valid = [p for p in candidates if p != bead.position and p not in node_pos]
 
-    # If no valid moves, return unchanged
-    if not valid:
-        return g
+#     # If no valid moves, return unchanged
+#     if not valid:
+#         return g
 
-    bead.position = random.choice(valid)
-    return g
+#     bead.position = random.choice(valid)
+#     return g
 
-# def endRotation(graph,n):
-#     node_pos = [b.position for b in graph]
-#     moves = []
-#     bead = graph[n]
-#     for d in DIRECTIONS:
-#         nxt = add(next(iter(bead.neighbors)).position,d)
-#         if nxt not in node_pos:
-#             moves.append(nxt)
-#     if len(moves) < 1:
-#         return graph
-#     else:
-#         rand = random.randrange(len(moves))
-#         graph[n].position = moves[rand]
-#         return graph
+def endRotationOG(graph,n):
+    node_pos = {b.position for b in graph}
+    moves = []
+    bead = graph[n]
+    neigh = next(iter(bead.neighbors)).position
+    for d in DIRECTIONS:
+        nxt = add(neigh,d)
+        if nxt not in node_pos:
+            moves.append(nxt)
+    if len(moves) < 1:
+        return graph
+    else:
+        rand = random.randrange(len(moves))
+        graph[n].position = moves[rand]
+        return graph
     
 def cornerFlip(graph, n):
     g = copy.deepcopy(graph)
@@ -125,7 +123,7 @@ def cornerFlip(graph, n):
 
 
 # Metropolis criteria using U(i) = (s-m_i)*e, where e < 0
-def accept(i, j, energy=-20):
+def accept(i, j, energy=-2.0):
     """Metropolis acceptance based on H–H contacts.""" 
     m = findTopolHHNeighbors(j)
     n = findTopolHHNeighbors(i)
@@ -138,6 +136,15 @@ def accept(i, j, energy=-20):
         except OverflowError: # not sure if this is needed.
             return False
         
+n = 4
+itr = 40
 
+main(n, itr, [0]*n)
+
+# x = [x for x in range(0,13)]
+# y = [calcZ(main(10, 10000, [0,0,0,0,0,0,0,0,0,0], e), e)[0] for e in x]
+# plt.plot(x,y, marker='o')
+# plt.yscale('log')
+# plt.show()
     
 # HPPHPPHPHH

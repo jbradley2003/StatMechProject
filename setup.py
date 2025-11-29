@@ -3,12 +3,15 @@ import scipy
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from node import Node
+from setup import *
 
 DIRECTIONS = [(1,0), (-1,0), (0,1), (0,-1)]
 
 def add(a, b):
     return (a[0] + b[0], a[1] + b[1])
 
+def dot(a, b):
+    return a[0]*b[0] + a[1]*b[1]
 # Chain Generation
 
 def enumerate_saws(n):
@@ -85,6 +88,38 @@ def setSequence(graph, seq):
         print("Length mismatch")
 
 
+def findTopolPPNeighbors(graph):
+    p_nodes = [node for node in graph if node.polarity == 'P']
+    p_positions = [node.position for node in graph if node.polarity == 'P']
+    visited = set()
+    m = 0
+    for n in p_nodes:
+        neigh_positions = [node.position for node in n.neighbors]
+        for d in DIRECTIONS:  
+            nxt = add(n.position, d)
+            if nxt in p_positions and nxt not in neigh_positions:
+                pair = tuple(sorted([n.position, nxt]))
+                if pair not in visited:
+                    visited.add(pair)
+                    m += 1
+    return m
+
+def findTopolHPNeighbors(graph):
+    p_nodes = [node for node in graph if node.polarity == 'H']
+    h_positions = [node.position for node in graph if node.polarity == 'P']
+    visited = set()
+    m = 0
+    for n in p_nodes:
+        neigh_positions = [node.position for node in n.neighbors]
+        for d in DIRECTIONS:  
+            nxt = add(n.position, d)
+            if nxt in h_positions and nxt not in neigh_positions:
+                pair = tuple(sorted([n.position, nxt]))
+                if pair not in visited:
+                    visited.add(pair)
+                    m += 1
+    return m
+
 def findTopolHHNeighbors(graph):
     h_nodes = [node for node in graph if node.polarity == 'H']
     h_positions = [node.position for node in graph if node.polarity == 'H']
@@ -111,10 +146,26 @@ def getGraphSequence(graph):
     return seq
 
 def findAllTopolNeighbors(graph):
-    return
+    m = findTopolHHNeighbors(graph)
+    u = findTopolHPNeighbors(graph) + findTopolPPNeighbors(graph)
+    return [m, u]
+
+def findMinPerim(graph):
+    n = len(graph)
+    m = np.floor(np.sqrt(n))
+    if m*m == n:
+        return 4*m
+    elif m*(m+1) >= n:
+        return 4*m + 2
+    else:
+        return 4*(m+1)
+
+def findMaxNeighbors(graph):
+    n = len(graph)
+    return n + 1 - findMinPerim(graph)/2
 
 def displayConformation(graph):
-    n = len(graph)
+    l = len(graph)
     x_l = []
     y_l = []
     plt.figure()
@@ -122,6 +173,8 @@ def displayConformation(graph):
             x_l.append(n.position[0])
             y_l.append(n.position[1])
     plt.plot(x_l,y_l, marker='.',ms=10)
+    plt.xlim(-l,l)
+    plt.ylim(-l,l)
     plt.show()
 
 def printPositions(graph):
@@ -132,6 +185,7 @@ def calcZ(ensemble, e):
     max = 0
     z = 0
     freq = {}
+    
     for i in ensemble:
         m = findTopolHHNeighbors(i)
         if m in freq:
@@ -145,21 +199,41 @@ def calcZ(ensemble, e):
             z += freq[i] * np.exp((max-i)*(-e))
     return [z, freq, max]
 
+def calcAvgP(ensemble, e):
+    max = 0
+    avg_p = 0
+    z = 0
+    max_n = int(findMaxNeighbors(ensemble[0]))
+    freq = {}
+    
+    for i in ensemble:
+        m, u = findAllTopolNeighbors(i)
+        if (m, u) in freq:
+            freq[(m, u)] += 1
+        else:
+            freq[(m, u)] = 1
+        if m > max:
+            max = m
+    for i in range(max+1):
+        for j in range(max_n+1 - i):
+            if (i, j) in freq:
+                avg_p += ((i + j)/max_n)*freq[(i, j)] * np.exp((max - i)*(-e))
+    return avg_p/calcZ(ensemble, e)[0]
+
 def calcAvgM(ensemble, e):
-    z, freq, max = calcZ(ensemble, e)
+    [z, freq, max] = calcZ(ensemble, e)
     avg_m = 0
     for i in range(max+1):
         if i in freq:
             avg_m += i * freq[i] * np.exp((max-i)*(-e))
-    avg_m /= z
-    return avg_m
+    return avg_m/z
 
 x = [x for x in range(0,13)]
 seq = [0,1,0,1,1,0,1,1,0,0] # HPHPPHPPHH
 
-g = generateConformations(10,seq)
-y = [calcZ(g, e)[0] for e in x]
+# g = generateConformations(10,seq)
+# y = [calcAvgP(g, e) for e in x]
 # plt.plot(x,y, marker='o')
-# plt.yscale('log')
+# # plt.yscale('log')
 # plt.show()
 
