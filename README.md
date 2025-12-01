@@ -2,7 +2,7 @@
 
 Based on Lau and Dill, 1989
 
-The files `setup.py' and 'node.py' contains all of the machinery for reproducing results found in Lau and Dill's paper:
+The files `setup.py` and `node.py` contains all of the machinery for reproducing results found in Lau and Dill's paper:
 - Generating all self-avoiding walks of a given size
 - Converting walks to graphs (lists of node objects)
 - Calculating average values and protein metrics (i.e. number of topological contacts)
