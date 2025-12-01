@@ -173,8 +173,8 @@ def displayConformation(graph):
             x_l.append(n.position[0])
             y_l.append(n.position[1])
     plt.plot(x_l,y_l, marker='.',ms=10)
-    plt.xlim(-l,l)
-    plt.ylim(-l,l)
+    # plt.xlim(-l,l)
+    # plt.ylim(-l,l)
     plt.show()
 
 def printPositions(graph):
@@ -232,8 +232,7 @@ x = [x for x in range(0,13)]
 seq = [0,1,0,1,1,0,1,1,0,0] # HPHPPHPPHH
 
 # g = generateConformations(10,seq)
-# y = [calcAvgP(g, e) for e in x]
+# y = [calcAvgM(g, e) for e in x]
 # plt.plot(x,y, marker='o')
-# # plt.yscale('log')
+# plt.yscale('log')
 # plt.show()
-
