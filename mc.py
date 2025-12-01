@@ -19,12 +19,12 @@ def main(size, iterations, seq, energy):
             new = endRotation(current, rand)
         else:
             new = cornerFlip(current, rand)
-        if accept(current, new, energy):
+        if accept(current, new, energy) and not graphEquals(new, current):
             total.append(new)
             current = new
             # displayConformation(current)
-            print(findTopolHHNeighbors(current))
-    displayConformation(current)
+            # print(findTopolHHNeighbors(current))
+    # displayConformation(current)
     print(len(total))
     return total
 
@@ -75,15 +75,17 @@ def accept(i, j, energy):
         except OverflowError: # not sure if this is needed.
             return False
         
-n = 8
-itr = 100000
-seq = [0,1,0,1,1,0,1,1]
+n = 10
+itr = 300000
+seq = [0,1,0,1,1,0,1,1,0,0]
 # main(n, itr, [0]*n)
-
+g = generateConformations(n, seq)
 x = [x for x in range(0,13)]
-y = [calcZ(main(n, itr, seq, e), e)[0] for e in x]
+y = [calcAvgP(main(n, itr, seq, e), e) for e in x]
+y1 = [calcAvgP(g, e) for e in x]
 plt.plot(x,y, marker='o')
-plt.yscale('log')
+plt.plot(x,y1, marker='o')
+# plt.yscale('log')
 plt.show()
     
 # HPPHPPHPHH

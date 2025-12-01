@@ -75,6 +75,14 @@ def generateConformations(n, seq):
         g.append(h)
     return g
 
+# Check if graphs are equal
+
+def graphEquals(a, b):
+    for i in range(len(a)):
+        if a[i].position != b[i].position:
+            return False
+    return True
+
 # Represent residue sequence as list of bits
 
 def setSequence(graph, seq):
@@ -231,7 +239,8 @@ def calcAvgM(ensemble, e):
 x = [x for x in range(0,13)]
 seq = [0,1,0,1,1,0,1,1,0,0] # HPHPPHPPHH
 
-# g = generateConformations(10,seq)
+# g = generateConformations(8,seq)
+# print(len(g))
 # y = [calcAvgM(g, e) for e in x]
 # plt.plot(x,y, marker='o')
 # plt.yscale('log')
