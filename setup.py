@@ -12,6 +12,7 @@ def add(a, b):
 
 def dot(a, b):
     return a[0]*b[0] + a[1]*b[1]
+
 # Chain Generation
 
 def enumerate_saws(n):
@@ -95,6 +96,14 @@ def setSequence(graph, seq):
     else:
         print("Length mismatch")
 
+def getGraphSequence(graph):
+    seq = []
+    for n in graph:
+        if n.polarity == 'H':
+            seq.append(0)
+        else:
+            seq.append(1)
+    return seq
 
 def findTopolPPNeighbors(graph):
     p_nodes = [node for node in graph if node.polarity == 'P']
@@ -144,14 +153,7 @@ def findTopolHHNeighbors(graph):
                     m += 1
     return m
 
-def getGraphSequence(graph):
-    seq = []
-    for n in graph:
-        if n.polarity == 'H':
-            seq.append(0)
-        else:
-            seq.append(1)
-    return seq
+
 
 def findAllTopolNeighbors(graph):
     m = findTopolHHNeighbors(graph)
@@ -237,11 +239,11 @@ def calcAvgM(ensemble, e):
     return avg_m/z
 
 x = [x for x in range(0,13)]
-seq = [0,1,0,1,1,0,1,1,0,0] # HPHPPHPPHH
+seq = [1,1,1,1,1,0,0,0,0,0] # HPHPPHPPHH
 
-# g = generateConformations(8,seq)
+# g = generateConformations(10,seq)
 # print(len(g))
-# y = [calcAvgM(g, e) for e in x]
+# y = [calcAvgP(g, e) for e in x]
 # plt.plot(x,y, marker='o')
-# plt.yscale('log')
+# # plt.yscale('log')
 # plt.show()
