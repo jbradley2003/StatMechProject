@@ -7,5 +7,5 @@ The files `setup.py` and `node.py` contains all of the machinery for reproducing
 - Converting walks to graphs (lists of node objects)
 - Calculating average values and protein metrics (i.e. number of topological contacts)
 
-This paper is being expanded upon by using Monte Carlo sampling to create ensembles of proteins, this is containted in `mc.py`.
+This paper is being expanded upon by using Monte Carlo sampling to create ensembles of proteins, this is contained in `mc.py`.
 
