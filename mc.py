@@ -7,10 +7,8 @@ from setup import *
 
 def main(size, iterations, seq, energy):
     total = []
-    g = generateConformations(size, seq)
-    l = random.randrange(size)
-    current = g[l]
-    setSequence(current, seq)
+    g = genRandCon(size)
+    setSequence(g, seq)
     for i in range(iterations):
         rand = random.randrange(size)
         if rand == 0 or rand == size - 1:
