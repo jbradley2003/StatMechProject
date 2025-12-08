@@ -5,13 +5,13 @@ import numpy as np
 from node import Node
 from setup import *
 
-def main(size, iterations, seq, energy):
+def main(n, iterations, seq, energy):
     total = []
-    g = genRandCon(size)
+    g = generateRandCon(n)
     setSequence(g, seq)
     for i in range(iterations):
-        rand = random.randrange(size)
-        if rand == 0 or rand == size - 1:
+        rand = random.randrange(n)
+        if rand == 0 or rand == n - 1:
             new = endRotation(current, rand)
         else:
             new = cornerFlip(current, rand)
@@ -24,7 +24,7 @@ def main(size, iterations, seq, energy):
     print(len(total))
     return total
 
-def genRandCon(n):
+def generateRandCon(n):
     graph = []
     visited = set()
     for i in range(n):
@@ -94,9 +94,9 @@ def accept(i, j, energy):
         except OverflowError: # not sure if this is needed.
             return False
         
-n = 13
-for i in range(10): 
-    displayConformation(genRandCon(n))
+# n = 13
+# for i in range(10): 
+#     displayConformation(generateRandCon(n))
 
 
 # itr = 300
