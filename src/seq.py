@@ -1,11 +1,9 @@
-import random
-import math
-import copy
+import time
 import numpy as np
 from node import Node
 from setup import *
 
-def generateSeq(n):
+def generateSeqs(n):
     base = [0]*n
     seq = []
     n_bits(n, base, seq)
@@ -26,18 +24,46 @@ def calcPhi(seq):
     n = len(seq)
     return (n-np.sum(seq))/n
 
-def sortCalcPhi(seq):
-    n = len(seq)
-    return -(n-np.sum(seq))/n
+# def sortCalcPhi(seq):
+#     return -calcPhi(seq)
+
+# s = sorted(generateSeq(n), key=sortCalcPhi)
+
+def classifySeqs(seq_list):
+    d = {}
+    for s in seq_list:
+        frac = calcPhi(s)
+        if frac not in d:
+            d[frac] = [s]
+        else:
+            temp = d[frac]
+            temp.append(s)
+            d[frac] = temp
+    return d
+
+def generateOrderedSeqs(n):
+    s = generateSeqs(n)
+    return classifySeqs(s)
+
+x = []
+y = []
 
 n = 10
-s = sorted(generateSeq(n), key=sortCalcPhi)
-x=[]
-y=[]
-for i in range(len(s)):
-    x.append(i+1)
-    print(calcPhi(s[i]))
-    y.append(calcPhi(s[i]))
+b = generateOrderedSeqs(n)
+g = generateConformations(n, [0]*n)
+j = 0
 
-plt.plot(x,y)
+start_time = time.perf_counter()
+for phi in list(b.keys()):
+    p = 0
+    x.append(phi)
+    for s in b.get(phi):
+        # j += 1
+        # print(j)
+        setEnsembleSequence(g, s)
+        p = max(p, calcZ(g, 200)[0]) 
+    y.append(p)
+end_time = time.perf_counter()
+print("time: ", (end_time - start_time))
+plt.plot(x,y,marker='o')
 plt.show()

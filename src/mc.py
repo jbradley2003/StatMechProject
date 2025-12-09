@@ -8,7 +8,7 @@ from setup import *
 def main(n, iterations, seq, energy):
     total = []
     g = generateRandCon(n)
-    setSequence(g, seq)
+    setGraphSequence(g, seq)
     for i in range(iterations):
         rand = random.randrange(n)
         if rand == 0 or rand == n - 1:

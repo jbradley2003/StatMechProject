@@ -72,7 +72,7 @@ def generateConformations(n, seq):
     g = []
     for w in enumerate_saws(n):
         h = sawToGraph(w)
-        setSequence(h, seq)
+        setGraphSequence(h, seq)
         g.append(h)
     return g
 
@@ -86,13 +86,21 @@ def graphEquals(a, b):
 
 # Represent residue sequence as list of bits
 
-def setSequence(graph, seq):
-    if len(graph) == len(seq):
-        for i in range(len(graph)):
-            if seq[i] == 0:
-                graph[i].polarity = 'H'
-            else:
-                graph[i].polarity = 'P'
+def setGraphSequence(graph, seq):
+    if type(graph[0]) is Node:
+        if len(graph) == len(seq):
+            for i in range(len(graph)):
+                if seq[i] == 0:
+                    graph[i].polarity = 'H'
+                else:
+                    graph[i].polarity = 'P'
+        else:
+            print("Length mismatch")
+
+def setEnsembleSequence(ensemble, seq):
+    if len(ensemble[0]) == len(seq):
+        for g in ensemble:
+            setGraphSequence(g, seq)
     else:
         print("Length mismatch")
 
@@ -191,7 +199,7 @@ def printPositions(graph):
     for i in range(len(graph)):
         print("Node " + str(i) + " position: " + str(graph[i].position))
 
-def calcZ(ensemble, e):
+def calcZ(ensemble, e=2):
     max = 0
     z = 0
     freq = {}
@@ -209,7 +217,7 @@ def calcZ(ensemble, e):
             z += freq[i] * np.exp((max-i)*(-e))
     return [z, freq, max]
 
-def calcAvgP(ensemble, e):
+def calcAvgP(ensemble, e=2):
     max = 0
     avg_p = 0
     z = 0
@@ -230,7 +238,7 @@ def calcAvgP(ensemble, e):
                 avg_p += ((i + j)/max_n)*freq[(i, j)] * np.exp((max - i)*(-e))
     return avg_p/calcZ(ensemble, e)[0]
 
-def calcAvgM(ensemble, e):
+def calcAvgM(ensemble, e=2):
     [z, freq, max] = calcZ(ensemble, e)
     avg_m = 0
     for i in range(max+1):
