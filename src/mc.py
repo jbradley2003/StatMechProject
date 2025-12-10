@@ -15,6 +15,7 @@ def main(n, iterations, seq, energy):
         start = len(g)
         count += 1
     setGraphSequence(g, seq)
+    total.append(g)
     current = g
     for i in range(iterations):
         rand = random.randrange(n)
@@ -78,6 +79,8 @@ def cornerFlip(graph, n):
         bead.position = new_pos
     return g
 
+# def calcZ()
+
 # Metropolis criteria using U(i) = -e(s-m_i), where e > 0
 def accept(i, j, energy):
     """Metropolis acceptance based on H–H contacts.""" 
@@ -91,4 +94,6 @@ def accept(i, j, energy):
             return np.exp(-energy *(n-m)) > r
         except OverflowError: # not sure if this is needed.
             return False
+
+
 

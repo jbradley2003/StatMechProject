@@ -12,7 +12,6 @@ def generateContour(n, itr, energy, seq, lvls=10, log=True, color='viridis'):
     start = time.perf_counter()
     X, Y = np.meshgrid(itr, energy)
     w, h = len(itr), len(energy)
-    print(len(itr))
     m_error = [[0 for x in range(w)] for y in range(h)] 
     for i in range(w):
         for j in range(h):
@@ -25,7 +24,7 @@ def generateContour(n, itr, energy, seq, lvls=10, log=True, color='viridis'):
     print("End: ", (end-start)/60)
     cp = plt.contourf(X, Y, m_error, levels=lvls, cmap=color) 
     plt.colorbar(cp, label=r'$<m>_{MC} - <m>_{LD}$')
-    plt.title("Folding Sequence (HPHPPHPPHH)")
+    plt.title("Folding Sequence " + seqToString(seq))
     plt.xlabel('Number of iterations')
     plt.ylabel(r'$-\epsilon \; (\frac{E}{kT})$')
     plt.contour(X, Y, m_error, colors='black', linestyles='dashed', linewidths=0.8)
@@ -37,7 +36,7 @@ def generateContour(n, itr, energy, seq, lvls=10, log=True, color='viridis'):
 
 folding = [0,1,0,1,1,0,1,1,0,0]
 nonfolding = [1,1,1,1,1,0,0,0,0,0]
-iterate = [10, 100, 1000, 10000, 100000]
+iterate = [10, 100, 1000, 10000]
 energy = [x for x in range(1, 13)]
 
 generateContour(10, iterate, energy, folding)

@@ -1,5 +1,4 @@
 import numpy as np
-import scipy
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from node import Node
@@ -113,15 +112,21 @@ def setEnsembleSequence(ensemble, seq):
     else:
         print("Length mismatch")
 
-def getGraphSequence(graph):
-    seq = []
+def seqToString(seq):
     string = ''
-    for n in graph:
-        if n.polarity == 'H':
+    for n in seq:
+        if n == 0:
             string += 'H'
-            seq.append(0)
         else:
             string += 'P'
+    return string
+
+def getGraphSequence(graph):
+    seq = []
+    for n in graph:
+        if n.polarity == 'H':
+            seq.append(0)
+        else:
             seq.append(1)
     return seq
 
@@ -212,22 +217,21 @@ def printPositions(graph):
         print("Node " + str(i) + " position: " + str(graph[i].position))
 
 def calcZ(ensemble, e=2):
-    max = 0
+    max_h = 0
     z = 0
     freq = {}
-    
     for i in ensemble:
         m = findTopolHHNeighbors(i)
         if m in freq:
             freq[m] += 1
         else:
             freq[m] = 1
-        if m > max:
-            max = m
-    for i in range(max+1):
+        max_h = max(m, max_h)
+    for i in range(max_h+1):
         if i in freq:
-            z += freq[i] * np.exp((max-i)*(-e))
-    return [z, freq, max]
+            z += freq[i] * np.exp((max_h-i)*(-e))
+            # print(i, freq[i], max_h)
+    return [z, freq, max_h]
 
 def calcAvgP(ensemble, e=2):
     max = 0
@@ -257,3 +261,4 @@ def calcAvgM(ensemble, e=2):
         if i in freq:
             avg_m += i * freq[i] * np.exp((max-i)*(-e))
     return avg_m/z
+
