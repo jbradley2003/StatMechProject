@@ -1,4 +1,3 @@
-import time
 import numpy as np
 from node import Node
 from setup import *
@@ -24,10 +23,8 @@ def calcPhi(seq):
     n = len(seq)
     return (n-np.sum(seq))/n
 
-# def sortCalcPhi(seq):
-#     return -calcPhi(seq)
-
-# s = sorted(generateSeq(n), key=sortCalcPhi)
+def sortCalcPhi(seq):
+    return -calcPhi(seq)
 
 def classifySeqs(seq_list):
     d = {}
@@ -42,6 +39,6 @@ def classifySeqs(seq_list):
     return d
 
 def generateOrderedSeqs(n):
-    s = generateSeqs(n)
+    s = sorted(generateSeqs(n), sortCalcPhi)
     return classifySeqs(s)
 

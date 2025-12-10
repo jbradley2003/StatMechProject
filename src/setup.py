@@ -5,20 +5,28 @@ import matplotlib.ticker as ticker
 from node import Node
 from setup import *
 
+# Tuple manipulation
+
 DIRECTIONS = [(1,0), (-1,0), (0,1), (0,-1)]
 
 def add(a, b):
+    """
+    Enables vector addition for tuples.
+    """
     return (a[0] + b[0], a[1] + b[1])
 
 def dot(a, b):
+    """
+    Enables use of dot product operator for tuples.
+    """
     return a[0]*b[0] + a[1]*b[1]
 
-# Chain Generation
+# Conformation generation
 
 def enumerate_saws(n):
     """
     Generate all self-avoiding walks of length n on a 2D square lattice
-    using depth-first search.
+    using depth-first search (DFS).
     """
     start = (0, 0)
     walk = [start]
@@ -52,9 +60,10 @@ def enumerate_saws(n):
 
     yield from dfs()
 
-# Turn SAW into graph
-
 def sawToGraph(saw):
+    """
+    Converts a list of positions (tuples) to list of Node objects.
+    """
     g = []
     i = 0
     for b in saw:
@@ -106,10 +115,13 @@ def setEnsembleSequence(ensemble, seq):
 
 def getGraphSequence(graph):
     seq = []
+    string = ''
     for n in graph:
         if n.polarity == 'H':
+            string += 'H'
             seq.append(0)
         else:
+            string += 'P'
             seq.append(1)
     return seq
 
@@ -245,13 +257,3 @@ def calcAvgM(ensemble, e=2):
         if i in freq:
             avg_m += i * freq[i] * np.exp((max-i)*(-e))
     return avg_m/z
-
-x = [x for x in range(0,13)]
-seq = [1,1,1,1,1,0,0,0,0,0] # HPHPPHPPHH
-
-# g = generateConformations(10,seq)
-# print(len(g))
-# y = [calcAvgP(g, e) for e in x]
-# plt.plot(x,y, marker='o')
-# # plt.yscale('log')
-# plt.show()
