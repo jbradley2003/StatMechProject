@@ -48,7 +48,7 @@ pip install numpy matplotlib
 ### Generate all conformations of length *n*
 
 ```python
-from setup import generateCons
+from setup import *
 
 # Generate all SAWs of length 10 (all‑H sequence as an example)
 ensemble = generateCons(10, [0]*10)
@@ -57,15 +57,14 @@ ensemble = generateCons(10, [0]*10)
 ### Display a conformation
 
 ```python
-from setup import displayConformation
 
 displayConformation(ensemble[0])
 ```
+![screenshot](images/Figure_1.png)
 
 ### Compute ensemble statistics
 
 ```python
-from setup import calcZ, calcAvgM
 
 z, freq, max_contacts = calcZ(ensemble, e=2)
 avg_m = calcAvgM(ensemble, e=2)
