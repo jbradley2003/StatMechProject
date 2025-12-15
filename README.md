@@ -25,7 +25,7 @@ The `src` folder contains all script files (`setup.py`, `mc.py`, `node.py`, `seq
 
 The `figures` folder contains example plots generated with the functions in the `data.py` file. If you want to save files to the folder change the path name at the top the file:
 
-```
+```python
 # Folder location for saving plots (replace)
 path_root = '/Users/xxxx/Documents/GitHub/StatMechProject/figures/'
 ```
@@ -73,8 +73,7 @@ print("Partition function Z:", z)
 print("Average H–H contacts:", avg_m)
 ```
 
-```Output
-
+```
 Partition function Z: 1048.6889789538795
 Average H–H contacts: 3.657694787609913
 ```
