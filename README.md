@@ -25,7 +25,7 @@ The `src` folder contains all script files (`setup.py`, `mc.py`, `node.py`, `seq
 
 The `figures` folder contains example plots generated with the functions in the `data.py` file. If you want to save files to the folder change the path name at the top the file:
 
-```
+```python
 # Folder location for saving plots (replace)
 path_root = '/Users/xxxx/Documents/GitHub/StatMechProject/figures/'
 ```
@@ -66,11 +66,16 @@ displayConformation(ensemble[0])
 
 ```python
 
-z, freq, max_contacts = calcZ(ensemble, e=2)
-avg_m = calcAvgM(ensemble, e=2)
+z, freq, max_contacts = calcZ(ensemble, 2)
+avg_m = calcAvgM(ensemble, 2)
 
 print("Partition function Z:", z)
 print("Average H–H contacts:", avg_m)
+```
+
+```
+Partition function Z: 1048.6889789538795
+Average H–H contacts: 3.657694787609913
 ```
 
 ---
@@ -84,8 +89,8 @@ print("Average H–H contacts:", avg_m)
 | `findTopolPPNeighbors(graph)`  | Count P–P contacts            |
 | `findAllTopolNeighbors(graph)` | Combined contact counts       |
 | `calcZ(ensemble, e)`           | Partition function            |
-| `calcAvgP(ensemble, e)`        | Average polar fraction        |
-| `calcNativeP(ensemble)`        | Native contact probability    |
+| `calcAvgP(ensemble, e)`        | Average compactness           |
+| `calcNativeP(ensemble)`        | Average Native state compactness    |
 | `calcAvgM(ensemble, e)`        | Average H–H contacts          |
 
 ---
@@ -93,7 +98,7 @@ print("Average H–H contacts:", avg_m)
 ## Notes
 
 * Enumeration of SAWs grows exponentially with chain length; exact enumeration becomes expensive beyond ~12–15 residues.
-* Expectation values from Monte Carlo ensem
+* Expectation values from Monte Carlo ensembles should be averaged over at least 5 trials.
 
 ---
 
