@@ -66,11 +66,17 @@ displayConformation(ensemble[0])
 
 ```python
 
-z, freq, max_contacts = calcZ(ensemble, e=2)
-avg_m = calcAvgM(ensemble, e=2)
+z, freq, max_contacts = calcZ(ensemble, 2)
+avg_m = calcAvgM(ensemble, 2)
 
 print("Partition function Z:", z)
 print("Average H–H contacts:", avg_m)
+```
+
+```Output
+
+Partition function Z: 1048.6889789538795
+Average H–H contacts: 3.657694787609913
 ```
 
 ---
