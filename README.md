@@ -21,7 +21,14 @@ This project implements enumeration and Monte Carlo sampling of **self‑avoidin
 
 ## Repository Structure
 
-The `src` folder contains all script files (`setup.py`, `mc.py`, `node.py`, `seq.py`, `data.py`). The files `setup.py`, `mc.py`, and `node.py` provide most of the groundwork for the simulations. Graphs are generated in `data.py`.
+The `src` folder contains all script files (`setup.py`, `mc.py`, `node.py`, `seq.py`, `data.py`). The files `setup.py`, `mc.py`, and `node.py` provide most of the groundwork for the simulations. Graphs are generated in `data.py`. 
+
+The `figures` folder contains example plots generated with the functions in the `data.py` file. If you want to save files to the folder change the path name at the top the file:
+
+```
+# Folder location for saving plots (replace)
+path_root = '/Users/xxxx/Documents/GitHub/StatMechProject/figures/'
+```
 
 ---
 
