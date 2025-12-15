@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 from node import Node
 from setup import *
 
@@ -275,7 +276,7 @@ def displayConformation(graph):
     """
     x_l = []
     y_l = []
-    l = len(graph)
+    l = len(graph) - 1
 
     plt.figure()
 
@@ -291,7 +292,7 @@ def displayConformation(graph):
     # plt.xlim(x_mid - l,x_mid + l)
     # plt.ylim(y_mid - l,y_mid + l)
     plt.xlim(-l, l)
-    plt.ylim(-l,l)
+    plt.ylim(-l, l)
     plt.plot(x_l,y_l, marker='.',ms=10)
     plt.grid()
     plt.show()

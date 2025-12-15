@@ -174,3 +174,9 @@ def cornerMove(n, graph):
         bead.position = new_pos
     return g
 #----------------------------------------------------------------------------------#
+
+if __name__ == "__main__":  
+
+    # Generate all SAWs of length 10 (all‑H sequence as an example)
+    ensemble = generateCons(10, [0]*10)
+    displayConformation(ensemble[0])
