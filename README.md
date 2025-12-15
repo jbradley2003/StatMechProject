@@ -89,8 +89,8 @@ Average H–H contacts: 3.657694787609913
 | `findTopolPPNeighbors(graph)`  | Count P–P contacts            |
 | `findAllTopolNeighbors(graph)` | Combined contact counts       |
 | `calcZ(ensemble, e)`           | Partition function            |
-| `calcAvgP(ensemble, e)`        | Average polar fraction        |
-| `calcNativeP(ensemble)`        | Native contact probability    |
+| `calcAvgP(ensemble, e)`        | Average compactness           |
+| `calcNativeP(ensemble)`        | Average Native state compactness    |
 | `calcAvgM(ensemble, e)`        | Average H–H contacts          |
 
 ---
