@@ -287,11 +287,13 @@ def displayConformation(graph):
     x_mid = min(x_l) + int((max(x_l)-min(x_l))/2)
     y_mid = min(y_l) + int((max(y_l)-min(y_l))/2)
 
+    # These are useful if the graph is not restricted to a n x n grid.
     # plt.xlim(x_mid - l,x_mid + l)
     # plt.ylim(y_mid - l,y_mid + l)
     plt.xlim(-l, l)
     plt.ylim(-l,l)
     plt.plot(x_l,y_l, marker='.',ms=10)
+    plt.grid()
     plt.show()
 
 def printPositions(graph):
