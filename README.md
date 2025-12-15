@@ -98,7 +98,7 @@ Average H–H contacts: 3.657694787609913
 ## Notes
 
 * Enumeration of SAWs grows exponentially with chain length; exact enumeration becomes expensive beyond ~12–15 residues.
-* Expectation values from Monte Carlo ensem
+* Expectation values from Monte Carlo ensembles should be averaged over at least 5 trials.
 
 ---
 
